@@ -1,0 +1,13 @@
+{
+  "name": "mw-cosmetics-notify",
+  "version": "1.0.0",
+  "description": "MW Cosmetics Notification Server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^2.7.0"
+  }
+}
