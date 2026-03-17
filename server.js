@@ -12,7 +12,7 @@ app.use(function(req, res, next){
 });
 
 const APP_ID  = 'e9bd9007-1e73-4d4f-895f-10e1999c9952';
-const API_KEY = 'os_v2_app_5g6zaby6ongu7ck7cdqzthezkjhhfkl5kr2utg47h2wvzyzryjzowysus73cxrqwy3s6ixd4ploivmdcrskuswtsghyhq543zu3ghvq';
+const API_KEY = process.env.OS_API_KEY; // من Render Environment
 const APP_URL = 'https://gentle-elf-8709cb.netlify.app';
 const ICON    = 'https://gentle-elf-8709cb.netlify.app/icon-192.png';
 
@@ -59,9 +59,9 @@ app.post('/send-user', async function(req, res){
 });
 
 app.get('/', function(req, res){
-  res.json({ status: 'MW Cosmetics Notification Server ✅' });
+  res.json({ status: 'MW Cosmetics Notification Server ✅', key_loaded: !!API_KEY });
 });
 
 app.listen(process.env.PORT || 3000, function(){
-  console.log('Server running on port ' + (process.env.PORT || 3000));
+  console.log('Server running, key loaded:', !!API_KEY);
 });
