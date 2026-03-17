@@ -1,6 +1,6 @@
-const express  = require('express');
-const OneSignal = require('@onesignal/node-onesignal');
-const app      = express();
+const express = require('express');
+const fetch   = require('node-fetch');
+const app     = express();
 
 app.use(express.json());
 app.use(function(req, res, next){
@@ -11,57 +11,52 @@ app.use(function(req, res, next){
   next();
 });
 
-const APP_ID   = 'e9bd9007-1e73-4d4f-895f-10e1999c9952';
-const APP_KEY  = 'os_v2_app_5g6zaby6ongu7ck7cdqzthezkl6u7gc4s6wuv2umtwxckcraqvegtsx5hl6556y5xaqyaqjul7wasy2dohvgrosdtbfwwdau23ku2ga';
-const USER_KEY = 'os_v2_org_6tndnopxe5gafjc2yg6yabevjgz5ztyfwcne2mnqcrxeqrdqbtmeqcxcwubxwu6nxc2kh2lmcl2fwcmbgt2jnlbsa2jdulocdzktyoq';
-const APP_URL  = 'https://gentle-elf-8709cb.netlify.app';
-const ICON     = 'https://gentle-elf-8709cb.netlify.app/icon-192.png';
+const APP_ID  = 'e9bd9007-1e73-4d4f-895f-10e1999c9952';
+const API_KEY = 'os_v2_app_5g6zaby6ongu7ck7cdqzthezkinjn27yluwezpmrxxmnxmq622vwysosw4ngg2uaq7cp3n5b22he5ue6r7u23kxt7b3n3vnfgajvr4i';
+const APP_URL = 'https://gentle-elf-8709cb.netlify.app';
+const ICON    = 'https://gentle-elf-8709cb.netlify.app/icon-192.png';
 
-const config = OneSignal.createConfiguration({
-  restApiKey:  APP_KEY,
-  userAuthKey: USER_KEY
-});
-const client = new OneSignal.DefaultApi(config);
+async function sendNotif(payload){
+  payload.app_id = APP_ID;
+  payload.url    = APP_URL;
+  payload.chrome_web_icon = ICON;
+  payload.firefox_icon    = ICON;
 
-async function sendNotification(payload){
-  const notif = new OneSignal.Notification();
-  notif.app_id          = APP_ID;
-  notif.target_channel  = 'push';
-  notif.url             = APP_URL;
-  notif.chrome_web_icon = ICON;
-  notif.headings        = payload.headings;
-  notif.contents        = payload.contents;
-  if(payload.included_segments) notif.included_segments = payload.included_segments;
-  if(payload.filters)           notif.filters           = payload.filters;
-  const resp = await client.createNotification(notif);
-  console.log('Response:', JSON.stringify(resp));
-  return resp;
+  var resp = await fetch('https://onesignal.com/api/v1/notifications', {
+    method:  'POST',
+    headers: {
+      'Content-Type':  'application/json',
+      'Authorization': 'Basic ' + API_KEY
+    },
+    body: JSON.stringify(payload)
+  });
+  var data = await resp.json();
+  console.log('Result:', JSON.stringify(data));
+  return data;
 }
 
 app.post('/send-all', async function(req, res){
   try{
     var { title, body } = req.body;
-    if(!title || !body) return res.status(400).json({ error: 'missing fields' });
-    var data = await sendNotification({
+    var data = await sendNotif({
       included_segments: ['Total Subscriptions'],
       headings: { ar: title, en: title },
       contents: { ar: body,  en: body  }
     });
     res.json(data);
-  }catch(e){ console.log('error:', e); res.status(500).json({ error: e.message }); }
+  }catch(e){ res.status(500).json({ error: e.message }); }
 });
 
 app.post('/send-user', async function(req, res){
   try{
     var { phone, title, body } = req.body;
-    if(!phone||!title||!body) return res.status(400).json({ error: 'missing fields' });
-    var data = await sendNotification({
+    var data = await sendNotif({
       filters:  [{ field:'tag', key:'phone', relation:'=', value: phone }],
       headings: { ar: title, en: title },
       contents: { ar: body,  en: body  }
     });
     res.json(data);
-  }catch(e){ console.log('error:', e); res.status(500).json({ error: e.message }); }
+  }catch(e){ res.status(500).json({ error: e.message }); }
 });
 
 app.get('/', function(req, res){
