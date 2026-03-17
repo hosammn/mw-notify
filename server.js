@@ -12,15 +12,14 @@ app.use(function(req, res, next){
 });
 
 const APP_ID  = 'e9bd9007-1e73-4d4f-895f-10e1999c9952';
-const API_KEY = 'os_v2_app_5g6zaby6ongu7ck7cdqzthezkinjn27yluwezpmrxxmnxmq622vwysosw4ngg2uaq7cp3n5b22he5ue6r7u23kxt7b3n3vnfgajvr4i';
+const API_KEY = 'os_v2_app_5g6zaby6ongu7ck7cdqzthezkjhhfkl5kr2utg47h2wvzyzryjzowysus73cxrqwy3s6ixd4ploivmdcrskuswtsghyhq543zu3ghvq';
 const APP_URL = 'https://gentle-elf-8709cb.netlify.app';
 const ICON    = 'https://gentle-elf-8709cb.netlify.app/icon-192.png';
 
 async function sendNotif(payload){
-  payload.app_id = APP_ID;
-  payload.url    = APP_URL;
+  payload.app_id          = APP_ID;
+  payload.url             = APP_URL;
   payload.chrome_web_icon = ICON;
-  payload.firefox_icon    = ICON;
 
   var resp = await fetch('https://onesignal.com/api/v1/notifications', {
     method:  'POST',
