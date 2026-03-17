@@ -4,7 +4,6 @@ const app     = express();
 
 app.use(express.json());
 
-// CORS - allow all origins
 app.use(function(req, res, next){
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
@@ -14,11 +13,10 @@ app.use(function(req, res, next){
 });
 
 const ONESIGNAL_APP_ID  = 'e9bd9007-1e73-4d4f-895f-10e1999c9952';
-const ONESIGNAL_API_KEY = 'njn27yluwezpmrxxmnxmq622v';
+const ONESIGNAL_API_KEY = 'os_v2_app_5g6zaby6ongu7ck7cdqzthezkkufhep2ifbuv4fzy67uvim5ytpke52cfhsohsjplea3eij7lphr3c7iwjgq4ualsjkfgnt6w75vv2a';
 const APP_URL           = 'https://gentle-elf-8709cb.netlify.app';
 const ICON_URL          = 'https://gentle-elf-8709cb.netlify.app/icon-192.png';
 
-// Send to all users
 app.post('/send-all', async function(req, res){
   try{
     var { title, body } = req.body;
@@ -39,15 +37,14 @@ app.post('/send-all', async function(req, res){
       })
     });
     var data = await resp.json();
-    console.log('send-all response:', JSON.stringify(data));
+    console.log('send-all:', JSON.stringify(data));
     res.json(data);
   }catch(e){
-    console.log('send-all error:', e.message);
+    console.log('error:', e.message);
     res.status(500).json({ error: e.message });
   }
 });
 
-// Send to specific user by phone tag
 app.post('/send-user', async function(req, res){
   try{
     var { phone, title, body } = req.body;
@@ -68,10 +65,10 @@ app.post('/send-user', async function(req, res){
       })
     });
     var data = await resp.json();
-    console.log('send-user response:', JSON.stringify(data));
+    console.log('send-user:', JSON.stringify(data));
     res.json(data);
   }catch(e){
-    console.log('send-user error:', e.message);
+    console.log('error:', e.message);
     res.status(500).json({ error: e.message });
   }
 });
