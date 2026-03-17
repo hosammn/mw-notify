@@ -13,22 +13,26 @@ app.use(function(req, res, next){
 });
 
 const ONESIGNAL_APP_ID  = 'e9bd9007-1e73-4d4f-895f-10e1999c9952';
-const ONESIGNAL_API_KEY = 'os_v2_app_5g6zaby6ongu7ck7cdqzthezkkufhep2ifbuv4fzy67uvim5ytpke52cfhsohsjplea3eij7lphr3c7iwjgq4ualsjkfgnt6w75vv2a';
+const ONESIGNAL_API_KEY = 'os_v2_app_5g6zaby6ongu7ck7cdqzthezkl6u7gc4s6wuv2umtwxckcraqvegtsx5hl6556y5xaqyaqjul7wasy2dohvgrosdtbfwwdau23ku2ga';
 const APP_URL           = 'https://gentle-elf-8709cb.netlify.app';
 const ICON_URL          = 'https://gentle-elf-8709cb.netlify.app/icon-192.png';
+
+// New OneSignal API URL
+const OS_URL = 'https://api.onesignal.com/notifications';
 
 app.post('/send-all', async function(req, res){
   try{
     var { title, body } = req.body;
     if(!title || !body) return res.status(400).json({ error: 'title and body required' });
-    var resp = await fetch('https://onesignal.com/api/v1/notifications', {
+    var resp = await fetch(OS_URL, {
       method:  'POST',
       headers: {
         'Content-Type':  'application/json',
-        'Authorization': 'Bearer ' + ONESIGNAL_API_KEY
+        'Authorization': 'Key ' + ONESIGNAL_API_KEY
       },
       body: JSON.stringify({
         app_id:            ONESIGNAL_APP_ID,
+        target_channel:    'push',
         included_segments: ['Total Subscriptions'],
         headings:          { ar: title, en: title },
         contents:          { ar: body,  en: body  },
@@ -49,18 +53,19 @@ app.post('/send-user', async function(req, res){
   try{
     var { phone, title, body } = req.body;
     if(!phone || !title || !body) return res.status(400).json({ error: 'missing fields' });
-    var resp = await fetch('https://onesignal.com/api/v1/notifications', {
+    var resp = await fetch(OS_URL, {
       method:  'POST',
       headers: {
         'Content-Type':  'application/json',
-        'Authorization': 'Bearer ' + ONESIGNAL_API_KEY
+        'Authorization': 'Key ' + ONESIGNAL_API_KEY
       },
       body: JSON.stringify({
-        app_id:          ONESIGNAL_APP_ID,
-        filters:         [{ field:'tag', key:'phone', relation:'=', value: phone }],
-        headings:        { ar: title, en: title },
-        contents:        { ar: body,  en: body  },
-        url:             APP_URL,
+        app_id:         ONESIGNAL_APP_ID,
+        target_channel: 'push',
+        filters:        [{ field:'tag', key:'phone', relation:'=', value: phone }],
+        headings:       { ar: title, en: title },
+        contents:       { ar: body,  en: body  },
+        url:            APP_URL,
         chrome_web_icon: ICON_URL
       })
     });
