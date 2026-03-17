@@ -25,7 +25,7 @@ app.post('/send-all', async function(req, res){
       method:  'POST',
       headers: {
         'Content-Type':  'application/json',
-        'Authorization': 'Key ' + ONESIGNAL_API_KEY
+        'Authorization': 'Bearer ' + ONESIGNAL_API_KEY
       },
       body: JSON.stringify({
         app_id:            ONESIGNAL_APP_ID,
@@ -53,7 +53,7 @@ app.post('/send-user', async function(req, res){
       method:  'POST',
       headers: {
         'Content-Type':  'application/json',
-        'Authorization': 'Key ' + ONESIGNAL_API_KEY
+        'Authorization': 'Bearer ' + ONESIGNAL_API_KEY
       },
       body: JSON.stringify({
         app_id:          ONESIGNAL_APP_ID,
