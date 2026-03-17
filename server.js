@@ -12,7 +12,7 @@ app.use(function(req, res, next){
 });
 
 const APP_ID  = 'e9bd9007-1e73-4d4f-895f-10e1999c9952';
-const API_KEY = 'os_v2_org_6tndnopxe5gafjc2yg6yabevjgz5ztyfwcne2mnqcrxeqrdqbtmeqcxcwubxwu6nxc2kh2lmcl2fwcmbgt2jnlbsa2jdulocdzktyoq';
+const API_KEY = 'os_v2_app_5g6zaby6ongu7ck7cdqzthezkl6u7gc4s6wuv2umtwxckcraqvegtsx5hl6556y5xaqyaqjul7wasy2dohvgrosdtbfwwdau23ku2ga';
 const APP_URL = 'https://gentle-elf-8709cb.netlify.app';
 const ICON    = 'https://gentle-elf-8709cb.netlify.app/icon-192.png';
 
@@ -22,25 +22,16 @@ async function sendNotification(payload){
   payload.url            = APP_URL;
   payload.chrome_web_icon= ICON;
 
-  // Try Bearer first (v2 keys)
   var resp = await fetch('https://api.onesignal.com/notifications', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY },
+    headers: {
+      'Content-Type':  'application/json',
+      'Authorization': 'Basic ' + API_KEY
+    },
     body: JSON.stringify(payload)
   });
   var data = await resp.json();
-  console.log('Bearer response:', JSON.stringify(data));
-
-  // If failed, try Key prefix (legacy)
-  if(data.errors){
-    resp = await fetch('https://onesignal.com/api/v1/notifications', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Key ' + API_KEY },
-      body: JSON.stringify(payload)
-    });
-    data = await resp.json();
-    console.log('Key response:', JSON.stringify(data));
-  }
+  console.log('Response:', JSON.stringify(data));
   return data;
 }
 
