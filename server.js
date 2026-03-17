@@ -13,8 +13,8 @@ app.use(function(req, res, next){
 
 const APP_ID  = 'e9bd9007-1e73-4d4f-895f-10e1999c9952';
 const API_KEY = process.env.OS_API_KEY; // من Render Environment
-const APP_URL = 'https://gentle-elf-8709cb.netlify.app';
-const ICON    = 'https://gentle-elf-8709cb.netlify.app/icon-192.png';
+const APP_URL = 'https://cosmeticsmw.netlify.app';
+const ICON    = 'https://cosmeticsmw.netlify.app/icon-192.png';
 
 async function sendNotif(payload){
   payload.app_id          = APP_ID;
